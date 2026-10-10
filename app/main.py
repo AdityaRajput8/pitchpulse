@@ -5,6 +5,7 @@ WS    : /ws/{sid} live ball-by-ball stream + controls
 Static: the dashboard (served from /static, one deploy, one link)
 """
 from __future__ import annotations
+from . import answers
 
 import asyncio
 import os
@@ -123,6 +124,10 @@ async def recovery(sid: str):
 async def ask(sid: str, body: AskIn):
     s = _session(sid)
     facts = s.engine.ask_facts(s.insights)
+    p = answers.find_player(body.question, facts["players"])
+    if p:  # focus the model on one player so it can't borrow another player's numbers
+        facts = {"players": [p], "verdict": answers.verdict(p),
+                 "standing": facts["standing"], "score": facts["score"]}
     return await llm.narrate("ask", facts, question=body.question)
 
 

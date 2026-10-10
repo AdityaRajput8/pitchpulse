@@ -32,6 +32,16 @@ def find_player(question: str, players: list[dict]) -> dict | None:
         if score > best_score:
             best, best_score = p, score
     return best
+def verdict(p: dict) -> str:
+    """Engine's own conclusion, so the LLM explains it instead of guessing."""
+    mult, eff, own = p["your_multiplier"], p["field_avg_multiplier"], p["field_ownership_pct"]
+    if mult == 0:
+        return "hurting your rank (you don't own him, many teams do)" if own >= 35 else "barely affects your rank"
+    if mult + 0.05 < eff:
+        return "hurting your rank (the field holds more of him than you do)"
+    if mult > eff + 0.05:
+        return "helping your rank (you hold more of him than the field does)"
+    return "neutral (you hold him about as much as the field does)"
 
 
 def _player_answer(p: dict, q: str) -> str:

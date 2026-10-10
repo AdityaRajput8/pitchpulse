@@ -44,10 +44,10 @@ TASKS = {
                 "live players could still move them up, and the biggest threat they don't own.",
     "catchup": "In at most 3 sentences (max 60 words), catch the fan up on what they missed: match "
                "situation first, then what it did to their points and rank, and why.",
-    "ask": "Answer exactly the fan's QUESTION, nothing else, in at most 3 sentences using only FACTS. "
-           "If they name a player, look him up in FACTS.players: your_multiplier vs field_avg_multiplier "
-           "explains whether he helps (yours higher) or hurts (field's higher) their rank. Do not "
-           "write multipliers with decimals you computed yourself. If FACTS cannot answer, say so briefly.",
+        "ask": "Answer exactly the fan's QUESTION, nothing else, in at most 3 sentences using only FACTS. "
+           "If FACTS has a 'verdict', it is the engine's conclusion about that player: state it plainly "
+           "and explain it using that player's ownership and captaincy numbers. Never contradict the "
+           "verdict. If FACTS cannot answer, say so briefly.",
 }
 
 
