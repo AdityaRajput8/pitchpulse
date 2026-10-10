@@ -1,0 +1,134 @@
+{
+ "Phil Salt": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "BAT",
+  "credits": 9.0,
+  "popularity": 0.62
+ },
+ "Virat Kohli": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "BAT",
+  "credits": 10.5,
+  "popularity": 0.88
+ },
+ "Rajat Patidar": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "BAT",
+  "credits": 8.5,
+  "popularity": 0.4
+ },
+ "Liam Livingstone": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "AR",
+  "credits": 8.5,
+  "popularity": 0.35
+ },
+ "Jitesh Sharma": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "WK",
+  "credits": 7.5,
+  "popularity": 0.3
+ },
+ "Tim David": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "BAT",
+  "credits": 8.0,
+  "popularity": 0.33
+ },
+ "Krunal Pandya": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "AR",
+  "credits": 8.0,
+  "popularity": 0.45
+ },
+ "Bhuvneshwar Kumar": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "BOWL",
+  "credits": 8.5,
+  "popularity": 0.52
+ },
+ "Josh Hazlewood": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "BOWL",
+  "credits": 9.0,
+  "popularity": 0.7
+ },
+ "Yash Dayal": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "BOWL",
+  "credits": 7.5,
+  "popularity": 0.25
+ },
+ "Suyash Sharma": {
+  "team": "Royal Challengers Bengaluru",
+  "role": "BOWL",
+  "credits": 7.0,
+  "popularity": 0.2
+ },
+ "Ruturaj Gaikwad": {
+  "team": "Chennai Super Kings",
+  "role": "BAT",
+  "credits": 9.5,
+  "popularity": 0.72
+ },
+ "Rachin Ravindra": {
+  "team": "Chennai Super Kings",
+  "role": "AR",
+  "credits": 8.5,
+  "popularity": 0.48
+ },
+ "Ayush Mhatre": {
+  "team": "Chennai Super Kings",
+  "role": "BAT",
+  "credits": 7.0,
+  "popularity": 0.22
+ },
+ "Shivam Dube": {
+  "team": "Chennai Super Kings",
+  "role": "AR",
+  "credits": 8.5,
+  "popularity": 0.55
+ },
+ "Dewald Brevis": {
+  "team": "Chennai Super Kings",
+  "role": "BAT",
+  "credits": 7.5,
+  "popularity": 0.28
+ },
+ "Ravindra Jadeja": {
+  "team": "Chennai Super Kings",
+  "role": "AR",
+  "credits": 9.0,
+  "popularity": 0.66
+ },
+ "MS Dhoni": {
+  "team": "Chennai Super Kings",
+  "role": "WK",
+  "credits": 7.5,
+  "popularity": 0.45
+ },
+ "Noor Ahmad": {
+  "team": "Chennai Super Kings",
+  "role": "BOWL",
+  "credits": 8.5,
+  "popularity": 0.5
+ },
+ "Khaleel Ahmed": {
+  "team": "Chennai Super Kings",
+  "role": "BOWL",
+  "credits": 8.0,
+  "popularity": 0.4
+ },
+ "Matheesha Pathirana": {
+  "team": "Chennai Super Kings",
+  "role": "BOWL",
+  "credits": 8.5,
+  "popularity": 0.48
+ },
+ "Anshul Kamboj": {
+  "team": "Chennai Super Kings",
+  "role": "BOWL",
+  "credits": 7.0,
+  "popularity": 0.18
+ }
+}

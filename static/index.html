@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PitchPulse — live fantasy copilot</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏏</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="floodlights" aria-hidden="true"><span class="fl fl-a"></span><span class="fl fl-b"></span><span class="fl fl-c"></span></div>
+
+<header class="topbar">
+  <div class="brand"><span class="live-dot" aria-hidden="true"></span>PitchPulse</div>
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-view="live" role="tab">Live</button>
+    <button class="tab" data-view="obs" role="tab">Observability</button>
+  </nav>
+  <div class="live-chip" id="liveChip" hidden><span class="lc-dot"></span><span id="liveChipText">Live</span></div>
+  <div class="controls" id="controls" hidden>
+    <div class="speed" role="group" aria-label="Replay speed">
+      <button data-speed="1" class="on">1x</button><button data-speed="2">2x</button><button data-speed="5">5x</button><button data-speed="20">20x</button>
+    </div>
+    <button class="btn ghost" id="pauseBtn">Pause</button>
+    <button class="btn ghost" id="restartBtn" title="Replay the match from ball 1">Restart</button>
+    <button class="btn ghost" id="newTeamBtn">Change team</button>
+  </div>
+</header>
+
+<!-- ============ TEAM BUILDER ============ -->
+<main id="builder" class="view">
+  <section class="hero glass">
+    <div class="versus" id="versus">
+      <div class="crest t0"><span id="crest0">—</span></div>
+      <span class="vs">vs</span>
+      <div class="crest t1"><span id="crest1">—</span></div>
+    </div>
+    <div class="hero-copy">
+      <p class="hero-meta" id="heroMeta">Loading match…</p>
+      <h1 id="bMatchTitle">Build your XI</h1>
+      <p class="sub">Your team locks when the match starts. PitchPulse then tracks it ball by ball against a <span id="bContest">20,000</span>-team mega contest and tells you <em>why</em> your rank moves.</p>
+      <div class="hero-actions">
+        <button class="btn primary lg" id="demoBtn">Use demo team &amp; start</button>
+        <button class="btn" id="loadDemoBtn">Load demo team to edit</button>
+        <button class="btn ghost" id="clearBtn">Clear</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="teambar glass" aria-live="polite">
+    <div class="slots" id="slots" aria-label="Players picked"></div>
+    <div class="tb-stat"><span class="k">Credits left</span><span class="v mono" id="bCredits">100</span></div>
+    <div class="tb-stat"><span class="k">Captain · 2x</span><span class="v" id="bCap">—</span></div>
+    <div class="tb-stat"><span class="k">Vice-captain · 1.5x</span><span class="v" id="bVc">—</span></div>
+    <div class="checks" id="checks"></div>
+    <div class="lock">
+      <button class="btn primary lg" id="startBtn" disabled>Lock team &amp; go live</button>
+      <span class="lock-why" id="lockWhy">Pick 11 players</span>
+    </div>
+  </section>
+  <p class="err" id="bErr" role="alert"></p>
+
+  <div class="role-tabs seg" id="roleTabs" role="tablist"></div>
+  <section class="squads" id="squads"></section>
+</main>
+
+<!-- ============ LIVE DASHBOARD ============ -->
+<main id="live" class="view" hidden>
+  <section class="kpis">
+    <article class="kpi glass">
+      <span class="k">Your points</span>
+      <div class="v mono" id="kPoints">0</div>
+      <span class="d mono" id="kPointsD">&nbsp;</span>
+    </article>
+    <article class="kpi glass kpi-rank" id="rankCard">
+      <span class="k">Live rank</span>
+      <div class="v mono" id="kRank">Level</div>
+      <span class="d mono" id="kRankD">of <span id="kSize">—</span></span>
+    </article>
+    <article class="kpi glass">
+      <span class="k">Top 10% cutoff</span>
+      <div class="v mono" id="kGap">—</div>
+      <span class="d" id="kGapD">&nbsp;</span>
+    </article>
+    <article class="kpi glass">
+      <span class="k" id="kMatchK">Match</span>
+      <div class="v mono" id="kScore">—</div>
+      <span class="d mono" id="kScoreD">&nbsp;</span>
+    </article>
+  </section>
+
+  <section class="grid-main">
+    <article class="panel glass chart-panel">
+      <div class="panel-head">
+        <div>
+          <h2 id="chartTitle">Your rank, ball by ball</h2>
+          <p class="note" id="chartNote">Lower is better. Green while you're climbing, red while you're sliding.</p>
+        </div>
+        <div class="seg" role="tablist" id="chartTabs">
+          <button class="on" data-chart="rank">Rank</button>
+          <button data-chart="race">Points race</button>
+          <button data-chart="worm">Match worm</button>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart" aria-label="Live chart"></canvas></div>
+      <div class="pulse"><span class="pulse-k">Match pulse</span><span id="pulseText">Waiting for the first ball…</span></div>
+    </article>
+
+    <article class="panel glass copilot">
+      <div class="panel-head">
+        <h2>AI copilot</h2>
+        <span class="pill" id="aiSource">checking…</span>
+      </div>
+      <form class="ask" id="askForm" autocomplete="off">
+        <input id="askInput" maxlength="300" placeholder="Ask about your team… e.g. why is Kohli hurting me?" aria-label="Ask the copilot">
+        <button class="btn primary" type="submit" id="askBtn">Ask</button>
+      </form>
+      <div class="quick">
+        <button class="chip-btn" data-q="catchup">Catch me up</button>
+        <button class="chip-btn" data-q="climb">How do I climb?</button>
+        <button class="chip-btn" data-q="Why did my rank move?">Why did my rank move?</button>
+        <button class="chip-btn" data-q="How are my captains doing?">My captains</button>
+      </div>
+      <div class="answer" id="answer" hidden>
+        <div class="answer-head"><span class="answer-q" id="answerQ"></span><button class="x" id="answerX" aria-label="Dismiss answer">×</button></div>
+        <div class="answer-a" id="answerA"></div>
+      </div>
+      <div class="feed-head"><span>Live insights</span><span class="note" id="feedCount"></span></div>
+      <ol class="feed" id="feed" aria-live="polite"></ol>
+    </article>
+  </section>
+
+  <section class="grid-bottom">
+    <article class="panel glass">
+      <div class="panel-head">
+        <div>
+          <h2>Player market</h2>
+          <p class="note">Fantasy points move like stock prices. Tap a player for the points breakdown.</p>
+        </div>
+        <div class="seg" id="marketTabs">
+          <button class="on" data-filter="mine">My XI</button>
+          <button data-filter="all">All players</button>
+        </div>
+      </div>
+      <div class="market" id="market"></div>
+    </article>
+
+    <article class="panel glass stream-panel">
+      <div class="panel-head">
+        <h2>Ball stream</h2>
+        <span class="pill mono" id="streamName">event bus</span>
+      </div>
+      <p class="note"><b class="mono" id="filteredCount">0</b> balls didn't move your team enough to notify you. They stay here instead.</p>
+      <ol class="stream" id="stream"></ol>
+    </article>
+  </section>
+</main>
+
+<!-- ============ OBSERVABILITY ============ -->
+<main id="obs" class="view" hidden>
+  <p class="err" id="obsErr"></p>
+  <section class="obs-grid" id="obsGrid"></section>
+  <section class="panel glass arch">
+    <h2>Pipeline</h2>
+<pre class="mono">ball feed (replay / live API)
+   │  XADD match:{session}
+   ▼
+Redis Streams ───────────── in-memory fallback
+   │  XREAD (worker)
+   ▼
+Match engine ── Dream11 T20 scoring ── 20k-team contest (M @ p, &lt;1 ms)
+   │                 │
+   │                 └─ rank-swing attribution vs teams near your rank
+   ▼
+Relevance filter ── alerts only when it moves YOUR team
+   │
+   ▼
+LLM narrator (Gemini → Groq → Claude) ── number-grounding guard ── rule-based fallback
+   │
+   ▼
+WebSocket ─▶ this dashboard</pre>
+  </section>
+</main>
+
+<div class="toasts" id="toasts" aria-live="assertive"></div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true">
+  <div class="sheet-card glass">
+    <button class="x sheet-x" id="sheetX" aria-label="Close">×</button>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

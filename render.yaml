@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: pitchpulse
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # single worker: sessions live in process memory
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: BALL_INTERVAL_S
+        value: "2.0"
+      - key: LLM_PROVIDERS
+        value: groq,gemini
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: REDIS_URL
+        sync: false
